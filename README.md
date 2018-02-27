@@ -38,19 +38,19 @@ public function index()
 ### Paginating Eloquent Results
 
 ````php
-$users = User::offsetPaginate(15);
+$users = User::offsetPaginate(5);
 ````
 
 Of course, you may call paginate after setting other constraints on the query, such as where clauses:
 
 ````php
-$users = User::where('votes', '>', 100)->offsetPaginate(15);
+$users = User::where('votes', '>', 100)->offsetPaginate(5);
 ````
 
 Or sorting your results:
 
 ````php
-$users = User::orderBy('id', 'desc')->offsetPaginate(15);
+$users = User::orderBy('id', 'desc')->offsetPaginate(5);
 ````
 ## Displaying Pagination Results
 
@@ -71,12 +71,14 @@ Calling `api/v1` will output:
    "data": [
         {}, 
    ],
-    "prev": 85,
-    "next": 95,
+    "offset": 60,
+    "offset": 60,
+    "prev": 55,
+    "next": 65,
     "limit": 5,
-    "total": 101,
-    "next_page_url": "https://example.com/api/v1/users?limit=5&offset=95",
-    "prev_page_url": "https://example.com/api/v1/users?limit=5&offset=85"
+    "total": 100
+    "next_page_url": "https://example.com/api/v1/users?limit=5&offset=65",
+    "prev_page_url": "https://example.com/api/v1/users?limit=5&offset=55"
 }
 ````
 
@@ -97,7 +99,7 @@ into `links` and `meta`.
             "next": "https://example.com/api/v1/users?offset=65"
         },
         "meta": {
-            "offset": 60
+            "offset": 60,
             "prev": 55,
             "next": 65,
             "limit": 5,
