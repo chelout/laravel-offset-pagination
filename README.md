@@ -1,0 +1,1 @@
+php artisan vendor:publish --provider="Chelout\OffsetPagination\OffsetPaginationServiceProvider" --tag="config"

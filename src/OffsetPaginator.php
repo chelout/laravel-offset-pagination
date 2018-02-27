@@ -27,9 +27,6 @@ class OffsetPaginator extends AbstractPaginator implements Arrayable, ArrayAcces
      */
     protected $request = null;
 
-    /**
-     * @var Offset
-     */
     protected $offset = null;
 
     protected $total;
@@ -55,7 +52,6 @@ class OffsetPaginator extends AbstractPaginator implements Arrayable, ArrayAcces
             $this->request = request();
         }
 
-        // $this->offset = self::resolveCurrentOffset($this->request);
         $this->offset = $this->request->offset;
 
         $this->query = $this->getRawQuery();
@@ -80,22 +76,9 @@ class OffsetPaginator extends AbstractPaginator implements Arrayable, ArrayAcces
         $this->items = $this->items->slice(0, $this->perPage);
     }
 
-    /**
-     * @param Request|null $request
-     *
-     * @return Offset
-     */
-    // public static function resolveCurrentOffset(Request $request = null)
-    // {
-    //     $request = $request ?? request();
-
-    //     return new Offset($request->offset);
-    // }
-
     public function nextOffset()
     {
-        return $this->total - $this->perPage > 0 ? $this->offset + $this->perPage : null;
-        // return $this->hasMorePages() ? $this->lastItem() : null;
+        return $this->total - $this->perPage > $this->offset ? $this->offset + $this->perPage : null;
     }
 
     /**
@@ -160,10 +143,15 @@ class OffsetPaginator extends AbstractPaginator implements Arrayable, ArrayAcces
     {
         $query = array_merge($this->query, $offset);
 
-        return $this->path
+        return $this->request->root() . '/' . $this->path
             . (str_contains($this->path, '?') ? '&' : '?')
             . http_build_query($query, '', '&')
             . $this->buildFragment();
+    }
+
+    public function getTotal()
+    {
+        return $this->total;
     }
 
     /**
@@ -174,37 +162,6 @@ class OffsetPaginator extends AbstractPaginator implements Arrayable, ArrayAcces
     public function hasMorePages()
     {
         return $this->hasMore;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isFirstPage()
-    {
-        // return ! $this->offset->isNext();
-        return;
-    }
-
-    /**
-     * Return the first identifier of the results.
-     *
-     * @return mixed
-     */
-    public function firstItem()
-    {
-        // return optional($this->items->first())->{$this->identifier};
-        return;
-    }
-
-    /**
-     * Return the last identifier of the results.
-     *
-     * @return mixed
-     */
-    public function lastItem()
-    {
-        // return optional($this->items->last())->{$this->identifier};
-        return;
     }
 
     /**
@@ -230,10 +187,10 @@ class OffsetPaginator extends AbstractPaginator implements Arrayable, ArrayAcces
     {
         return [
             'data' => $this->items->toArray(),
-            'path' => $this->url(),
             'prev' => $this->prevOffset(),
             'next' => $this->nextOffset(),
-            'per_page' => (int) $this->perPage(),
+            'limit' => (int) $this->perPage(),
+            'total' => $this->getTotal(),
             'next_page_url' => $this->nextPageUrl(),
             'prev_page_url' => $this->previousPageUrl(),
         ];

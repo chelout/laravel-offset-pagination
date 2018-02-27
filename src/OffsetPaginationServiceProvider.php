@@ -40,17 +40,14 @@ class OffsetPaginationServiceProvider extends ServiceProvider
     public function registerMacro()
     {
         $macro = function ($perPage = null, $columns = ['*'], array $options = []) {
-            // Resolve the offset by using the request query params
-            $offset = OffsetPaginator::resolveCurrentOffset(
-                $options['request'] ?? request()
-            );
 
-// $perPage = $perPage ?: $this->model->getPerPage();
-            $perPage = $perPage ?? config('offset_pagination.per_page', 15);
-            $perPage = $perPage > config('offset_pagination.max_per_page') ? config('offset_pagination.max_per_page') : config('offset_pagination.per_page', 15);
+            if (! $perPage) {
+                $perPage = request('limit') ?? config('offset_pagination.per_page', 15);
+            }
+            $perPage = $perPage > config('offset_pagination.max_per_page') ? config('offset_pagination.max_per_page') : $perPage;
 
             // Limit results
-            $this->skip($validated['offset'] ?? 0)
+            $this->skip(request('offset') ?? 0)
                 ->limit($perPage);
 
             $total = $this->toBase()->getCountForPagination();
