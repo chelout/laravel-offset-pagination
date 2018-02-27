@@ -38,7 +38,7 @@ class OffsetPaginator extends AbstractPaginator implements Arrayable, ArrayAcces
      * @param int   $perPage
      * @param array $options
      */
-    public function __construct($items, $perPage, $total, array $options = [])
+    public function __construct($items, $perPage, $total = null, array $options = [])
     {
         foreach ($options as $key => $value) {
             $this->{$key} = $value;
@@ -46,18 +46,18 @@ class OffsetPaginator extends AbstractPaginator implements Arrayable, ArrayAcces
 
         $this->perPage = $perPage;
 
-        $this->total = $total;
-
         if (is_null($this->request)) {
             $this->request = request();
         }
 
-        $this->offset = $this->request->offset;
+        $this->offset = $this->request->offset ?? 0;
 
         $this->query = $this->getRawQuery();
         $this->path = $this->path !== '/' ? rtrim($this->path, '/') : rtrim($this->request->path(), '/');
 
         $this->setItems($items);
+
+        $this->total = $total ?? $this->items->count();
     }
 
     /**
@@ -74,6 +74,11 @@ class OffsetPaginator extends AbstractPaginator implements Arrayable, ArrayAcces
         $this->hasMore = $this->items->count() > $this->perPage;
 
         $this->items = $this->items->slice(0, $this->perPage);
+    }
+
+    public function getOffset()
+    {
+        return $this->offset;
     }
 
     public function nextOffset()
@@ -187,6 +192,7 @@ class OffsetPaginator extends AbstractPaginator implements Arrayable, ArrayAcces
     {
         return [
             'data' => $this->items->toArray(),
+            'offset' => $this->getOffset(),
             'prev' => $this->prevOffset(),
             'next' => $this->nextOffset(),
             'limit' => (int) $this->perPage(),
