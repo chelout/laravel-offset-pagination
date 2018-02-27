@@ -78,7 +78,7 @@ class OffsetPaginator extends AbstractPaginator implements Arrayable, ArrayAcces
 
     public function getOffset()
     {
-        return $this->offset;
+        return intval($this->offset);
     }
 
     public function nextOffset()
@@ -159,6 +159,11 @@ class OffsetPaginator extends AbstractPaginator implements Arrayable, ArrayAcces
         return $this->total;
     }
 
+    public function perPage()
+    {
+        return intval($this->perPage);
+    }
+
     /**
      * Determine if there is more items in the data store.
      *
@@ -195,7 +200,7 @@ class OffsetPaginator extends AbstractPaginator implements Arrayable, ArrayAcces
             'offset' => $this->getOffset(),
             'prev' => $this->prevOffset(),
             'next' => $this->nextOffset(),
-            'limit' => (int) $this->perPage(),
+            'limit' => $this->perPage(),
             'total' => $this->getTotal(),
             'next_page_url' => $this->nextPageUrl(),
             'prev_page_url' => $this->previousPageUrl(),
