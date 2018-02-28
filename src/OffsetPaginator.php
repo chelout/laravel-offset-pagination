@@ -107,7 +107,7 @@ class OffsetPaginator extends AbstractPaginator implements Arrayable, ArrayAcces
      */
     public function prevOffset()
     {
-        if ($this->offset > $this->perPage) {
+        if ($this->offset >= $this->perPage) {
             return $this->offset - $this->perPage;
         }
     }
@@ -117,7 +117,7 @@ class OffsetPaginator extends AbstractPaginator implements Arrayable, ArrayAcces
      */
     public function previousPageUrl()
     {
-        if ($this->prevOffset()) {
+        if (! is_null($this->prevOffset())) {
             $query = [
                 'offset' => $this->prevOffset(),
             ];
