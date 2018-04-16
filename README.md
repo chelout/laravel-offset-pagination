@@ -6,7 +6,7 @@ It calculates the SQL query limits automatically by checking the requests GET pa
 You can install this package via composer using:
 
 ```bash
-composer require chelout/laravel-offset-pagination
+composer require chelout/offset-pagination
 ```
 
 The package will automatically register itself.
