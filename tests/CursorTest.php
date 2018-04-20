@@ -2,9 +2,9 @@
 
 namespace Chelout\OffsetPagination\Tests;
 
-use Illuminate\Http\Request;
 use Chelout\OffsetPagination\Cursor;
 use Chelout\OffsetPagination\CursorPaginator;
+use Illuminate\Http\Request;
 
 class CursorTest extends TestCase
 {
@@ -28,7 +28,7 @@ class CursorTest extends TestCase
 
     public function test_resolves_prev_cursor()
     {
-        $get_prev = config('offset_pagination.navigation_names')[0].'_'.
+        $get_prev = config('offset_pagination.navigation_names')[0] . '_' .
             config('offset_pagination.identifier_name');
 
         $val = 2;
@@ -47,7 +47,7 @@ class CursorTest extends TestCase
 
     public function test_resolves_next_cursor()
     {
-        $get_next = config('offset_pagination.navigation_names')[1].'_'.
+        $get_next = config('offset_pagination.navigation_names')[1] . '_' .
             config('offset_pagination.identifier_name');
 
         $val = 3;
@@ -60,7 +60,7 @@ class CursorTest extends TestCase
 
         $this->assertAttributeEquals($val, 'next', $cursor, "Cursor's value should be $val");
         $this->assertTrue($cursor->isNext(), 'is next');
-        $this->assertTrue(!$cursor->isPrev(), 'is not prev');
+        $this->assertTrue(! $cursor->isPrev(), 'is not prev');
         $this->assertTrue($cursor->isPresent(), 'is present');
     }
 

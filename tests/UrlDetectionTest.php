@@ -2,8 +2,8 @@
 
 namespace Chelout\OffsetPagination\Tests;
 
-use Illuminate\Http\Request;
 use Chelout\OffsetPagination\CursorPaginator;
+use Illuminate\Http\Request;
 
 class UrlDetectionTest extends TestCase
 {

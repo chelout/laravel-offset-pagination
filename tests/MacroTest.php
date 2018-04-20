@@ -2,10 +2,10 @@
 
 namespace Chelout\OffsetPagination\Tests;
 
-use Illuminate\Database\Query\Builder as QueryBuilder;
-use Illuminate\Http\Request;
 use Chelout\OffsetPagination\CursorPaginator;
 use Chelout\OffsetPagination\Tests\Fixtures\Models\User;
+use Illuminate\Database\Query\Builder as QueryBuilder;
+use Illuminate\Http\Request;
 
 class MacroTest extends ModelsTestCase
 {
