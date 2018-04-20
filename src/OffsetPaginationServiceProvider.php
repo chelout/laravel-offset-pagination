@@ -17,7 +17,7 @@ class OffsetPaginationServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__.'/../config/offset_pagination.php' => config_path('offset_pagination.php'),
+                __DIR__ . '/../config/offset_pagination.php' => config_path('offset_pagination.php'),
             ], 'config');
         }
 
@@ -31,7 +31,7 @@ class OffsetPaginationServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/offset_pagination.php', 'offset_pagination');
+        $this->mergeConfigFrom(__DIR__ . '/../config/offset_pagination.php', 'offset_pagination');
     }
 
     /**
@@ -40,7 +40,6 @@ class OffsetPaginationServiceProvider extends ServiceProvider
     public function registerMacro()
     {
         $macro = function ($perPage = null, $columns = ['*'], array $options = []) {
-
             if (! $perPage) {
                 $perPage = request('limit') ?? config('offset_pagination.per_page', 15);
             }

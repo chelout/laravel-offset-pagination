@@ -2,9 +2,9 @@
 
 namespace Chelout\OffsetPagination\Tests;
 
+use Chelout\OffsetPagination\Tests\Fixtures\Models\User;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Application;
-use Chelout\OffsetPagination\Tests\Fixtures\Models\User;
 
 class ModelsTestCase extends TestCase
 {
@@ -12,7 +12,7 @@ class ModelsTestCase extends TestCase
     {
         parent::setUp();
         // Reset config on each request
-        config(['offset_pagination' => require __DIR__.'/Fixtures/config/simple.php']);
+        config(['offset_pagination' => require __DIR__ . '/Fixtures/config/simple.php']);
         $this->setUpDatabase($this->app);
         $this->setUpRoutes($this->app);
     }

@@ -4,7 +4,7 @@ namespace Chelout\OffsetPagination\Tests;
 
 use Chelout\OffsetPagination\CursorPaginator;
 
-class OffsetPaginationTest extends TestCase
+class CursorPaginationTest extends TestCase
 {
     public function test_init()
     {
