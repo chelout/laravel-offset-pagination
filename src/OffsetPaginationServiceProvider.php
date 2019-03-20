@@ -43,7 +43,7 @@ class OffsetPaginationServiceProvider extends ServiceProvider
             if (! $perPage) {
                 $perPage = request('limit') ?? config('offset_pagination.per_page', 15);
             }
-            $perPage = $perPage > config('offset_pagination.max_per_page') ? config('offset_pagination.max_per_page') : $perPage;
+            $perPage = $perPage < 0 ? 0 : ($perPage > config('offset_pagination.max_per_page') ? config('offset_pagination.max_per_page') : $perPage);
 
             // Limit results
             $this->skip(request('offset') ?? 0)
