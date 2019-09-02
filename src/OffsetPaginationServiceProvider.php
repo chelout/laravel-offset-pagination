@@ -45,8 +45,10 @@ class OffsetPaginationServiceProvider extends ServiceProvider
             }
             $perPage = $perPage > config('offset_pagination.max_per_page') ? config('offset_pagination.max_per_page') : $perPage;
 
+            $skip = (int) (request('page') ?? 1) * (int) (request('offset') ?? 0);
+
             // Limit results
-            $this->skip(request('offset') ?? 0)
+            $this->skip($skip)
                 ->limit($perPage);
 
             $total = $this->toBase()->getCountForPagination();
