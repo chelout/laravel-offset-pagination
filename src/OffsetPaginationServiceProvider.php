@@ -47,7 +47,7 @@ class OffsetPaginationServiceProvider extends ServiceProvider
 
             $offset = (int) (request('offset') ?? 0);
             $page = (int) (request('page') ?? 1);
-            $skip = (($page -1) * $perPage) + $offset;
+            $skip = (($page - 1) * $perPage) + $offset;
 
             // Limit results
             $this->skip($skip)

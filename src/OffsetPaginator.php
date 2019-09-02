@@ -60,7 +60,7 @@ class OffsetPaginator extends AbstractPaginator implements Arrayable, ArrayAcces
         $this->total = $total ?? $this->items->count();
         $this->offset = $this->request->get('offset');
         $this->lastPage = max((int) ceil(($this->total - $this->offset) / $this->perPage), 1);
-        $this->currentPage = (int)($this->request->get('page') ?? 1);
+        $this->currentPage = (int) ($this->request->get('page') ?? 1);
     }
 
     /**
