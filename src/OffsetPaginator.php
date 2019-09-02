@@ -60,6 +60,7 @@ class OffsetPaginator extends AbstractPaginator implements Arrayable, ArrayAcces
         $this->setItems($items);
 
         $this->total = $total ?? $this->items->count();
+        $this->currentPage = $this->setCurrentPage();
     }
 
     /**
@@ -78,6 +79,16 @@ class OffsetPaginator extends AbstractPaginator implements Arrayable, ArrayAcces
         $this->items = $this->items->slice(0, $this->perPage);
     }
 
+    /**
+     * Get the current page for the request.
+     *
+     * @return int
+     */
+    protected function setCurrentPage()
+    {
+        return (int)($this->request->get('page') ?? 1);
+    }
+
     public function getOffset()
     {
         return intval($this->offset);
@@ -85,7 +96,7 @@ class OffsetPaginator extends AbstractPaginator implements Arrayable, ArrayAcces
 
     public function getCurrentPage()
     {
-        return (int)$this->request->get('page') ?? 1;
+        return (int) ($this->request->get('page') ?? 1);
     }
 
     public function getLastPage()
@@ -209,9 +220,11 @@ class OffsetPaginator extends AbstractPaginator implements Arrayable, ArrayAcces
     {
         return [
             'data' => $this->items->toArray(),
-            'current_page' => $this->getCurrentPage(),
+            'current_page' => $this->currentPage,
             'last_page' => $this->getLastPage(),
             'per_page' => $this->perPage,
+            'from' => $this->firstItem(),
+            'to' => $this->lastItem(),
             'offset' => $this->getOffset(),
             'prev' => $this->prevOffset(),
             'next' => $this->nextOffset(),
