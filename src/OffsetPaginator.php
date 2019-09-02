@@ -84,7 +84,6 @@ class OffsetPaginator extends AbstractPaginator implements Arrayable, ArrayAcces
         return intval($this->offset);
     }
 
-
     /**
      * Get the URL for the next page.
      *
@@ -121,8 +120,7 @@ class OffsetPaginator extends AbstractPaginator implements Arrayable, ArrayAcces
                 'offset' => true,
             ])->all();
     }
-
-
+    
     public function getTotal()
     {
         return $this->total;
