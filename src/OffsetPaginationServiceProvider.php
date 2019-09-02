@@ -45,7 +45,9 @@ class OffsetPaginationServiceProvider extends ServiceProvider
             }
             $perPage = $perPage > config('offset_pagination.max_per_page') ? config('offset_pagination.max_per_page') : $perPage;
 
-            $skip = (int) (request('page') ?? 1) * (int) (request('offset') ?? 0);
+            $offset = (int) request('offset');
+            $page = ((int) request('page') -1) * $perPage;
+            $skip = $page + $offset;
 
             // Limit results
             $this->skip($skip)
