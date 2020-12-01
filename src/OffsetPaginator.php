@@ -31,6 +31,8 @@ class OffsetPaginator extends AbstractPaginator implements Arrayable, ArrayAcces
 
     protected $total;
 
+    protected $perPage;
+
     /**
      * Create a new paginator instance.
      *
@@ -50,14 +52,15 @@ class OffsetPaginator extends AbstractPaginator implements Arrayable, ArrayAcces
             $this->request = request();
         }
 
-        $this->offset = $this->request->offset ?? 0;
-
-        $this->query = $this->getRawQuery();
-        $this->path = $this->path !== '/' ? rtrim($this->path, '/') : rtrim($this->request->path(), '/');
+        $this->query = $this->request->query();
+        $this->path = $this->request->root() . '/' . ($this->path !== '/' ? rtrim($this->path, '/') : rtrim($this->request->path(), '/'));
 
         $this->setItems($items);
 
         $this->total = $total ?? $this->items->count();
+        $this->offset = $this->request->get('offset');
+        $this->lastPage = max((int) ceil(($this->total - $this->offset) / $this->perPage), 1);
+        $this->currentPage = (int) ($this->request->get('page') ?? 1);
     }
 
     /**
@@ -81,48 +84,27 @@ class OffsetPaginator extends AbstractPaginator implements Arrayable, ArrayAcces
         return intval($this->offset);
     }
 
-    public function nextOffset()
-    {
-        return $this->total - $this->perPage > $this->offset ? $this->offset + $this->perPage : null;
-    }
-
     /**
-     * The URL for the next page, or null.
+     * Get the URL for the next page.
      *
      * @return string|null
      */
     public function nextPageUrl()
     {
-        if ($this->nextOffset()) {
-            $query = [
-                'offset' => $this->nextOffset(),
-            ];
-
-            return $this->url($query);
+        if ($this->lastPage > $this->currentPage) {
+            return $this->url($this->currentPage + 1);
         }
     }
 
     /**
+     * Get the URL for the previous page.
+     *
      * @return string|null
-     */
-    public function prevOffset()
-    {
-        if ($this->offset >= $this->perPage) {
-            return $this->offset - $this->perPage;
-        }
-    }
-
-    /**
-     * @return null|string
      */
     public function previousPageUrl()
     {
-        if (! is_null($this->prevOffset())) {
-            $query = [
-                'offset' => $this->prevOffset(),
-            ];
-
-            return $this->url($query);
+        if ($this->currentPage > 1) {
+            return $this->url($this->currentPage - 1);
         }
     }
 
@@ -137,21 +119,6 @@ class OffsetPaginator extends AbstractPaginator implements Arrayable, ArrayAcces
             ->diffKeys([
                 'offset' => true,
             ])->all();
-    }
-
-    /**
-     * @param array $offset
-     *
-     * @return string
-     */
-    public function url($offset = [])
-    {
-        $query = array_merge($this->query, $offset);
-
-        return $this->request->root() . '/' . $this->path
-            . (str_contains($this->path, '?') ? '&' : '?')
-            . http_build_query($query, '', '&')
-            . $this->buildFragment();
     }
 
     public function getTotal()
@@ -197,13 +164,18 @@ class OffsetPaginator extends AbstractPaginator implements Arrayable, ArrayAcces
     {
         return [
             'data' => $this->items->toArray(),
-            'offset' => $this->getOffset(),
-            'prev' => $this->prevOffset(),
-            'next' => $this->nextOffset(),
-            'limit' => $this->perPage(),
             'total' => $this->getTotal(),
+            'per_page' => $this->perPage,
+            'current_page' => $this->currentPage,
+            'last_page' => $this->lastPage,
+            'first_page_url' => $this->url(1),
+            'last_page_url' => $this->url($this->lastPage),
             'next_page_url' => $this->nextPageUrl(),
             'prev_page_url' => $this->previousPageUrl(),
+            'from' => $this->firstItem(),
+            'to' => $this->lastItem(),
+            'offset' => $this->getOffset(),
+            'limit' => $this->perPage(),
         ];
     }
 
